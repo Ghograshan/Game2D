@@ -2,6 +2,7 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
+import main.UtilityTool;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -44,18 +45,26 @@ public class Player extends Entity{
     }
 
     public void getPlayerImage() {
+        up1 = setup("knight_up_1");
+        up2 = setup("knight_up_2");
+        down1 = setup("knight_down_1");
+        down2 = setup("knight_down_2");
+        left1 = setup("knight_left_1");
+        left2 = setup("knight_left_2");
+        right1 = setup("knight_right_1");
+        right2 = setup("knight_right_2");
+    }
+    public BufferedImage setup(String imageName){
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+
         try {
-            up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_up_1.png")));
-            up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_up_2.png")));
-            down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_down_1.png")));
-            down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_down_2.png")));
-            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_left_1.png")));
-            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_left_2.png")));
-            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_right_1.png")));
-            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_right_2.png")));
-        } catch (IOException e) {
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/" + imageName + ".png")));
+            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+        } catch (IOException e){
             e.printStackTrace();
         }
+        return image;
     }
 
     public void update() {

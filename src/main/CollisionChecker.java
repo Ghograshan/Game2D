@@ -29,7 +29,7 @@ public class CollisionChecker {
                 entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
-                if (gp.tileManager.tiles[tileNum1].collision || gp.tileManager.tiles[tileNum2].collision) {
+                if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
                     entity.collisionOn = true;
 
                 }
@@ -38,7 +38,7 @@ public class CollisionChecker {
                 entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
                 tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
-                if (gp.tileManager.tiles[tileNum1].collision || gp.tileManager.tiles[tileNum2].collision) {
+                if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
                     entity.collisionOn = true;
 
                 }
@@ -47,7 +47,7 @@ public class CollisionChecker {
                 entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
-                if (gp.tileManager.tiles[tileNum1].collision || gp.tileManager.tiles[tileNum2].collision) {
+                if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
                     entity.collisionOn = true;
 
                 }
@@ -56,7 +56,7 @@ public class CollisionChecker {
                 entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
                 tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
-                if (gp.tileManager.tiles[tileNum1].collision || gp.tileManager.tiles[tileNum2].collision) {
+                if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
                     entity.collisionOn = true;
 
                 }
