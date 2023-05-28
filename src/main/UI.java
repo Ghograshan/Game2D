@@ -1,6 +1,8 @@
 package main;
 
+import object.OBJ_Heart;
 import object.OBJ_Key;
+import object.SuperObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,6 +14,7 @@ public class UI {
     GamePanel gp;
     Graphics2D g2;
     Font maruMonica;
+    BufferedImage heart_full, heart_half, heart_blank;
     public boolean messageOn = false;
     public String message = "";
     int messageCounter = 0;
@@ -29,6 +32,12 @@ public class UI {
         } catch (FontFormatException | IOException e){
             e.printStackTrace();
         }
+
+        //CREATE HUD OBJECT
+        SuperObject heart = new OBJ_Heart(gp);
+        heart_full = heart.image;
+        heart_half = heart.image2;
+        heart_blank = heart.image3;
     }
     public void showMessage(String text){
         message = text;
@@ -47,14 +56,16 @@ public class UI {
         }
         //Play State
         if (gp.gameState == gp.playState){
-
+            drawPlayerLife();
         }
         //Pause State
         if (gp.gameState == gp.pauseState){
+            drawPlayerLife();
             drawPauseScreen();
         }
         //Dialog State
         if (gp.gameState == gp.dialogueState){
+            drawPlayerLife();
             drawDialogueScreen();
         }
     }
@@ -188,6 +199,36 @@ public class UI {
         g2.setColor(c);
         g2.setStroke(new BasicStroke(5));
         g2.drawRoundRect(x + 5, y + 5, width - 10, height - 10, 25, 25);
+    }
+
+    public void drawPlayerLife() {
+        int x = gp.tileSize / 2;
+        int y = gp.tileSize / 2;
+        int i = 0;
+
+        //DRAW BLANK HEALTH
+        while (i < gp.player.maxHealth / 2){
+            g2.drawImage(heart_blank, x, y, null);
+            i++;
+            x += gp.tileSize;
+        }
+
+        //RESET
+        x = gp.tileSize / 2;
+        y = gp.tileSize / 2;
+        i = 0;
+
+        //DRAW CURRENT HEALTH
+        while (i < gp.player.health){
+            g2.drawImage(heart_half, x, y, null);
+            i++;
+            if (i < gp.player.health) {
+                g2.drawImage(heart_full, x, y, null);
+            }
+            i++;
+            x += gp.tileSize;
+        }
+
     }
 
     public int getXforCenteredText(String text){
