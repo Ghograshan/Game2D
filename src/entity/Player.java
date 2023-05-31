@@ -11,14 +11,15 @@ import java.util.Objects;
 
 public class Player extends Entity{
 
-    GamePanel gp;
     KeyHandler keyH;
     public final int screenX;
     public final int screenY;
     public int hasKey = 0;
+    public int playerSkin = 0;
 
     public Player(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
+        super(gp);
+
         this.keyH = keyH;
 
         screenX = gp.screenWidth / 2 - (gp.tileSize/2);
@@ -44,18 +45,26 @@ public class Player extends Entity{
     }
 
     public void getPlayerImage() {
-        try {
-            up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_up_1.png")));
-            up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_up_2.png")));
-            down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_down_1.png")));
-            down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_down_2.png")));
-            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_left_1.png")));
-            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_left_2.png")));
-            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_right_1.png")));
-            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/knight_right_2.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (playerSkin == 0) {
+            up1 = setup("/player/knight_up_1");
+            up2 = setup("/player/knight_up_2");
+            down1 = setup("/player/knight_down_1");
+            down2 = setup("/player/knight_down_2");
+            left1 = setup("/player/knight_left_1");
+            left2 = setup("/player/knight_left_2");
+            right1 = setup("/player/knight_right_1");
+            right2 = setup("/player/knight_right_2");
+        } else if (playerSkin == 1) {
+            up1 = setup("/player/oldman_up_1");
+            up2 = setup("/player/oldman_up_2");
+            down1 = setup("/player/oldman_down_1");
+            down2 = setup("/player/oldman_down_2");
+            left1 = setup("/player/oldman_left_1");
+            left2 = setup("/player/oldman_left_2");
+            right1 = setup("/player/oldman_right_1");
+            right2 = setup("/player/oldman_right_2");
         }
+
     }
 
     public void update() {
@@ -73,7 +82,7 @@ public class Player extends Entity{
                 direction = "right";
             }
 
-           // CHECK tile collision
+            // CHECK tile collision
             collisionOn = false;
             gp.Checker.checkTile(this);
 
@@ -81,7 +90,7 @@ public class Player extends Entity{
             int objIndex = gp.Checker.checkObject(this, true);
             pickUpObject(objIndex);
 
-          // if its false, player can move
+            // if its false, player can move
             if(!collisionOn){
                 switch (direction) {
                     case "up" -> worldY -= speed;
@@ -89,7 +98,6 @@ public class Player extends Entity{
                     case "left" -> worldX -= speed;
                     case "right" -> worldX += speed;
                 }
-
             }
             spriteCounter++;
             if (spriteCounter > 12) {
@@ -105,18 +113,18 @@ public class Player extends Entity{
     }
     public void pickUpObject(int index){
         if (index != 999) {
-            String objectName = gp.obj[index].name;
+            String objectName = gp.obj[gp.currentMap][index].name;
             switch (objectName) {
                 case "Key" -> {
                     gp.playSE(1);
                     gp.ui.showMessage("You got a key!");
                     hasKey++;
-                    gp.obj[index] = null;
+                    gp.obj[gp.currentMap][index] = null;
                 }
                 case "Door" -> {
                     gp.playSE(3);
                     if (hasKey > 0) {
-                        gp.obj[index] = null;
+                        gp.obj[gp.currentMap][index] = null;
                         hasKey--;
                         gp.ui.showMessage("You opened the door!");
                     }
@@ -127,11 +135,16 @@ public class Player extends Entity{
                 case "Boots" -> {
                     gp.playSE(2);
                     speed += 2;
-                    gp.obj[index] = null;
+                    gp.obj[gp.currentMap][index] = null;
                     gp.ui.showMessage("Speed up!");
                 }
                 case "Chest" -> {
-                    gp.ui.gameFinished = true;
+                    if (gp.currentMap != 1) {
+                        gp.gameState = gp.endState;
+                    } else {
+                        gp.gameState = gp.finalState;
+                    }
+
                     gp.stopMusic();
                     gp.playSE(4);
                 }
